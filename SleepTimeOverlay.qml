@@ -31,7 +31,6 @@ Item {
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
             exclusionMode: ExclusionMode.Ignore
 
-            // Full opaque surface — no transparency, no escape
             color: Theme.surface
 
             Item {
@@ -53,14 +52,14 @@ Item {
                         text: I18n.tr("Schlafenszeit")
                         font.pixelSize: 42
                         font.bold: true
-                        color: Theme.text
+                        color: Theme.surfaceText
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
 
                     Text {
-                        text: I18n.tr("Ruhezeit ist aktiv. Bis morgen um %1 Uhr.".arg(rootOverlay.wakeupText))
+                        text: I18n.tr("Ruhezeit ist aktiv. Bis morgen um %1 Uhr.").arg(rootOverlay.wakeupText)
                         font.pixelSize: 20
-                        color: Theme.textSub
+                        color: Theme.surfaceVariantText
                         horizontalAlignment: Text.AlignHCenter
                         wrapMode: Text.WordWrap
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -70,7 +69,7 @@ Item {
                     Text {
                         text: I18n.tr("Lege das Gerät weg und schlaf gut. 🌙")
                         font.pixelSize: 16
-                        color: Theme.textSub
+                        color: Theme.surfaceVariantText
                         horizontalAlignment: Text.AlignHCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                     }

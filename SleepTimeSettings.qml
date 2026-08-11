@@ -3,15 +3,35 @@ pragma ComponentBehavior: Bound
 import "./dms-common"
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import qs.Common
 import qs.Widgets
-import qs.Services
 import qs.Modules.Plugins
+import qs.Services
 
 PluginSettings {
-    id: page
-
+    id: rootSettings
     pluginId: "sleepTime"
+
+    property var livePlugin: null
+
+    Timer {
+        interval: 1000
+        running: livePlugin === null
+        repeat: true
+        onTriggered: {
+            livePlugin = PluginService.getGlobalVar("sleepTime", "instance");
+        }
+    }
+
+    Component.onCompleted: {
+        livePlugin = PluginService.getGlobalVar("sleepTime", "instance");
+        PluginService.globalVarChanged.connect((pid, vname) => {
+            if (pid === "sleepTime" && vname === "instance") {
+                livePlugin = PluginService.getGlobalVar("sleepTime", "instance");
+            }
+        });
+    }
 
     SettingsCard {
         title: I18n.tr("General")
@@ -38,7 +58,6 @@ PluginSettings {
             maximum: 23
             unit: "h"
         }
-
         SliderSettingPlus {
             settingKey: "startMinute"
             label: I18n.tr("Start minute")
@@ -47,7 +66,6 @@ PluginSettings {
             maximum: 55
             unit: "m"
         }
-
         SliderSettingPlus {
             settingKey: "endHour"
             label: I18n.tr("End hour")
@@ -57,7 +75,6 @@ PluginSettings {
             maximum: 23
             unit: "h"
         }
-
         SliderSettingPlus {
             settingKey: "endMinute"
             label: I18n.tr("End minute")
@@ -74,5 +91,9 @@ PluginSettings {
             text: I18n.tr("During quiet hours the entire screen is blocked with a non-dismissable overlay. No skip or close button — it lifts automatically at the end time.")
             wrap: true
         }
+    }
+
+    PluginAbout {
+        repoUrl: "https://github.com/jw2122-kiwi/dms-sleep-time"
     }
 }
