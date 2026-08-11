@@ -39,15 +39,17 @@ PluginSettings {
 
         ToggleSettingPlus {
             settingKey: "enabled"
-            label: I18n.tr("Enable Take a Steak")
+            label: I18n.tr("Enable Sleep Time")
             description: I18n.tr("When off, the overlay never shows")
             defaultValue: false
         }
     }
 
     SettingsCard {
-        title: I18n.tr("Quiet Hours")
-        subtitle: I18n.tr("Screen blocks between start and end time")
+        SectionTitle {
+            text: I18n.tr("Quiet Hours")
+            icon: "schedule"
+        }
 
         SliderSettingPlus {
             settingKey: "startHour"
@@ -57,7 +59,10 @@ PluginSettings {
             minimum: 0
             maximum: 23
             unit: "h"
+            leftLabel: "0h"
+            rightLabel: "23h"
         }
+
         SliderSettingPlus {
             settingKey: "startMinute"
             label: I18n.tr("Start minute")
@@ -65,7 +70,10 @@ PluginSettings {
             minimum: 0
             maximum: 55
             unit: "m"
+            leftLabel: "0m"
+            rightLabel: "55m"
         }
+
         SliderSettingPlus {
             settingKey: "endHour"
             label: I18n.tr("End hour")
@@ -74,7 +82,10 @@ PluginSettings {
             minimum: 0
             maximum: 23
             unit: "h"
+            leftLabel: "0h"
+            rightLabel: "23h"
         }
+
         SliderSettingPlus {
             settingKey: "endMinute"
             label: I18n.tr("End minute")
@@ -82,11 +93,17 @@ PluginSettings {
             minimum: 0
             maximum: 55
             unit: "m"
+            leftLabel: "0m"
+            rightLabel: "55m"
         }
     }
 
     SettingsCard {
-        title: I18n.tr("Notes")
+        SectionTitle {
+            text: I18n.tr("Notes")
+            icon: "info"
+        }
+
         StatusDisplay {
             text: I18n.tr("During quiet hours the entire screen is blocked with a non-dismissable overlay. No skip or close button — it lifts automatically at the end time.")
             wrap: true
@@ -94,6 +111,6 @@ PluginSettings {
     }
 
     PluginAbout {
-        repoUrl: "https://github.com/jw2122-kiwi/dms-take-a-steak"
+        repoUrl: "https://github.com/jw2122-kiwi/dms-sleep-time"
     }
 }
