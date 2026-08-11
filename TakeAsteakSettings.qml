@@ -11,7 +11,7 @@ import qs.Services
 
 PluginSettings {
     id: rootSettings
-    pluginId: "sleepTime"
+    pluginId: "takeAsteak"
 
     property var livePlugin: null
 
@@ -20,15 +20,15 @@ PluginSettings {
         running: livePlugin === null
         repeat: true
         onTriggered: {
-            livePlugin = PluginService.getGlobalVar("sleepTime", "instance");
+            livePlugin = PluginService.getGlobalVar("takeAsteak", "instance");
         }
     }
 
     Component.onCompleted: {
-        livePlugin = PluginService.getGlobalVar("sleepTime", "instance");
+        livePlugin = PluginService.getGlobalVar("takeAsteak", "instance");
         PluginService.globalVarChanged.connect((pid, vname) => {
-            if (pid === "sleepTime" && vname === "instance") {
-                livePlugin = PluginService.getGlobalVar("sleepTime", "instance");
+            if (pid === "takeAsteak" && vname === "instance") {
+                livePlugin = PluginService.getGlobalVar("takeAsteak", "instance");
             }
         });
     }
@@ -39,7 +39,7 @@ PluginSettings {
 
         ToggleSettingPlus {
             settingKey: "enabled"
-            label: I18n.tr("Enable Sleep Time")
+            label: I18n.tr("Enable Take a Steak")
             description: I18n.tr("When off, the overlay never shows")
             defaultValue: false
         }
@@ -94,6 +94,6 @@ PluginSettings {
     }
 
     PluginAbout {
-        repoUrl: "https://github.com/jw2122-kiwi/dms-sleep-time"
+        repoUrl: "https://github.com/jw2122-kiwi/dms-take-a-steak"
     }
 }

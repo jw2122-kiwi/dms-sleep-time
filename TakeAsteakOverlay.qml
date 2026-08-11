@@ -42,7 +42,7 @@ Item {
                     width: Math.min(parent.width * 0.8, 600)
 
                     DankIcon {
-                        name: "bedtime"
+                        name: "restaurant"
                         size: 96
                         anchors.horizontalCenter: parent.horizontalCenter
                         color: Theme.primary

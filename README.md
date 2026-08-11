@@ -1,4 +1,4 @@
-# Sleep Time
+# Take a Steak
 
 A DMS (DankMaterialShell) plugin that blocks your screen during quiet hours with a **non-dismissable full-screen overlay**. No skip, no close — it lifts automatically when the quiet window ends.
 
@@ -12,18 +12,18 @@ A DMS (DankMaterialShell) plugin that blocks your screen during quiet hours with
 ## Install (local)
 
 ```bash
-git clone https://github.com/jw2122-kiwi/dms-sleep-time.git
-cd dms-sleep-time
+git clone https://github.com/jw2122-kiwi/dms-take-a-steak.git
+cd dms-take-a-steak
 
 # Symlink into DMS plugins dir (path depends on your setup):
-ln -s "$(pwd)" ~/.config/dankmaterialshell/plugins/sleepTime
+ln -s "$(pwd)" ~/.config/dankmaterialshell/plugins/takeAsteak
 #   or (older setups):
-# ln -s "$(pwd)" ~/.config/DankMaterialShell/plugins/sleepTime
+# ln -s "$(pwd)" ~/.config/DankMaterialShell/plugins/takeAsteak
 
 # Restart DMS (Command Palette → "Restart Shell")
 ```
 
-Then enable it in the Sleep Time settings page and set your quiet hours.
+Then enable it in the Take a Steak settings page and set your quiet hours.
 
 ## How it works
 

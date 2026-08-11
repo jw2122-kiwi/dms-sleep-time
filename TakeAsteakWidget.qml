@@ -19,15 +19,15 @@ PluginComponent {
     property int endMinute: pluginData.endMinute ?? 30
 
     property bool isActiveInstance: false
-    property bool isSleepActive: false
+    property bool isSteakActive: false
 
-    pluginId: "sleepTime"
+    pluginId: "takeAsteak"
     pluginService: PluginService
 
     // ── Time helpers ─────────────────────────────────────────────────────
     function toMin(h, m) { return h * 60 + m; }
 
-    function isInQuietHours() {
+    function isInSteakHours() {
         const now = new Date();
         const cur = now.getHours() * 60 + now.getMinutes();
         const start = toMin(root.startHour, root.startMinute);
@@ -36,9 +36,9 @@ PluginComponent {
         return cur >= start || cur < end; // wraps midnight
     }
 
-    function updateSleepState() {
-        if (!root.enabled) { root.isSleepActive = false; return; }
-        root.isSleepActive = root.isInQuietHours();
+    function updateSteakState() {
+        if (!root.enabled) { root.isSteakActive = false; return; }
+        root.isSteakActive = root.isInSteakHours();
     }
 
     function msUntilNextBoundary() {
@@ -74,7 +74,7 @@ PluginComponent {
             }
         }
         if (root.isActiveInstance) {
-            root.updateSleepState();
+            root.updateSteakState();
             root.reschedule();
         }
     }
@@ -85,11 +85,11 @@ PluginComponent {
         }
     }
 
-    onEnabledChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
-    onStartHourChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
-    onStartMinuteChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
-    onEndHourChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
-    onEndMinuteChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
+    onEnabledChanged: if (root.isActiveInstance) { root.updateSteakState(); root.reschedule(); }
+    onStartHourChanged: if (root.isActiveInstance) { root.updateSteakState(); root.reschedule(); }
+    onStartMinuteChanged: if (root.isActiveInstance) { root.updateSteakState(); root.reschedule(); }
+    onEndHourChanged: if (root.isActiveInstance) { root.updateSteakState(); root.reschedule(); }
+    onEndMinuteChanged: if (root.isActiveInstance) { root.updateSteakState(); root.reschedule(); }
 
     // ── Single-shot timer, rescheduled to next boundary ─────────────────
     Timer {
@@ -97,20 +97,20 @@ PluginComponent {
         interval: 60000
         repeat: false
         running: root.isActiveInstance && root.enabled
-        onTriggered: { root.updateSleepState(); root.reschedule(); }
+        onTriggered: { root.updateSteakState(); root.reschedule(); }
     }
 
     // ── Control Center widget ───────────────────────────────────────────
-    ccWidgetIcon: "bedtime"
-    ccWidgetPrimaryText: I18n.tr("Sleep Time")
+    ccWidgetIcon: "restaurant"
+    ccWidgetPrimaryText: I18n.tr("Take a Steak")
     ccWidgetSecondaryText: root.enabled
-        ? (root.isSleepActive ? I18n.tr("Active — quiet hours") : I18n.tr("Enabled · " + root.startHour + ":" + (root.startMinute < 10 ? "0" : "") + root.startMinute + "–" + root.endHour + ":" + (root.endMinute < 10 ? "0" : "") + root.endMinute))
+        ? (root.isSteakActive ? I18n.tr("Active — quiet hours") : I18n.tr("Enabled · " + root.startHour + ":" + (root.startMinute < 10 ? "0" : "") + root.startMinute + "–" + root.endHour + ":" + (root.endMinute < 10 ? "0" : "") + root.endMinute))
         : I18n.tr("Disabled")
 
     // ── Overlay (non-dismissable) ──────────────────────────────────────
-    SleepTimeOverlay {
+    TakeAsteakOverlay {
         id: sleepOverlay
         pluginRoot: root
-        visible: root.isSleepActive
+        visible: root.isSteakActive
     }
 }

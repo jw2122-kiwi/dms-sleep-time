@@ -1,10 +1,10 @@
 {
-  "id": "sleepTime",
-  "name": "Sleep Time",
+  "id": "takeAsteak",
+  "name": "Take a Steak",
   "description": "Blocks the screen during quiet hours (default 20:00–06:30) with a non-dismissable overlay. Configurable time window and toggle in settings.",
   "version": "1.0.0",
   "author": "jw2122-kiwi",
-  "icon": "bedtime",
+  "icon": "restaurant",
   "type": [
     "daemon",
     "widget"
@@ -14,11 +14,11 @@
     "ipc"
   ],
   "components": {
-    "daemon": "./SleepTimeWidget.qml",
-    "widget": "./SleepTimeWidget.qml"
+    "daemon": "./TakeAsteakWidget.qml",
+    "widget": "./TakeAsteakWidget.qml"
   },
-  "component": "./SleepTimeWidget.qml",
-  "settings": "./SleepTimeSettings.qml",
+  "component": "./TakeAsteakWidget.qml",
+  "settings": "./TakeAsteakSettings.qml",
   "permissions": [
     "settings_read",
     "settings_write"
