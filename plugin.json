@@ -1,0 +1,26 @@
+{
+  "id": "sleepTime",
+  "name": "Sleep Time",
+  "description": "Blocks the screen during quiet hours (default 20:00–06:30) with a non-dismissable overlay. Configurable time window and toggle in settings.",
+  "version": "1.0.0",
+  "author": "jw2122-kiwi",
+  "icon": "bedtime",
+  "type": [
+    "daemon",
+    "widget"
+  ],
+  "capabilities": [
+    "control-center",
+    "ipc"
+  ],
+  "components": {
+    "daemon": "./SleepTimeWidget.qml",
+    "widget": "./SleepTimeWidget.qml"
+  },
+  "component": "./SleepTimeWidget.qml",
+  "settings": "./SleepTimeSettings.qml",
+  "permissions": [
+    "settings_read",
+    "settings_write"
+  ]
+}
