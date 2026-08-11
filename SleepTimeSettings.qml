@@ -1,12 +1,14 @@
+pragma ComponentBehavior: Bound
+
+import "./dms-common"
 import QtQuick
 import Quickshell
-import "./dms-common"
 import qs.Common
 import qs.Widgets
 import qs.Services
 import qs.Modules.Plugins
 
-PluginSettingsPage {
+PluginSettings {
     id: page
 
     pluginId: "sleepTime"
