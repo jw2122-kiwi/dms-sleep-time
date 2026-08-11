@@ -21,36 +21,65 @@ PluginComponent {
     pluginService: PluginService
 
     // ── Time check ──────────────────────────────────────────────────────
+    function toMin(h, m) { return h * 60 + m; }
+
     function isInQuietHours() {
-        const now = new Date();
-        const cur = now.getHours() * 60 + now.getMinutes();
-        const start = root.startHour * 60 + root.startMinute;
-        const end = root.endHour * 60 + root.endMinute;
-        if (start <= end) {
-            // same-day window (e.g. 09:00–17:00)
-            return cur >= start && cur < end;
-        } else {
-            // wraps midnight (e.g. 20:00–06:30)
-            return cur >= start || cur < end;
-        }
+        const cur = new Date().getHours() * 60 + new Date().getMinutes();
+        const start = toMin(root.startHour, root.startMinute);
+        const end = toMin(root.endHour, root.endMinute);
+        if (start <= end) return cur >= start && cur < end;
+        return cur >= start || cur < end; // wraps midnight
     }
 
     function updateSleepState() {
-        if (!root.enabled) {
-            root.isSleepActive = false;
-            return;
-        }
+        if (!root.enabled) { root.isSleepActive = false; return; }
         root.isSleepActive = root.isInQuietHours();
+    }
+
+    // ── Dynamic interval: ms until next boundary (start or end) ─────────
+    function msUntilNextBoundary() {
+        if (!root.enabled) return 0; // timer won't run anyway
+        const now = new Date();
+        const cur = now.getHours() * 60 + now.getMinutes();
+        const curSec = cur * 60 + now.getSeconds();
+        const start = toMin(root.startHour, root.startMinute);
+        const end = toMin(root.endHour, root.endMinute);
+        const startSec = start * 60;
+        const endSec = end * 60;
+        let next = -1;
+        // candidates: start (today + tomorrow), end (today + tomorrow)
+        const cands = [
+            startSec, startSec + 1440 * 60,
+            endSec, endSec + 1440 * 60
+        ];
+        for (const c of cands) {
+            let diff = c - curSec;
+            if (diff <= 0) diff += 1440 * 60;
+            if (next === -1 || diff < next) next = diff;
+        }
+        // add a small buffer (2s) so we don't miss the tick
+        return Math.max(next * 1000 + 2000, 1000);
+    }
+
+    function reschedule() {
+        checkTimer.interval = root.msUntilNextBoundary();
+        checkTimer.restart();
     }
 
     // ── Daemon instance election (global-var mutex, not parent!==null) ──
     Component.onCompleted: {
-        if (pluginId !== "" && !PluginService.getGlobalVar(pluginId, "instance")) {
-            PluginService.setGlobalVar(pluginId, "instance", root);
-            root.isActiveInstance = true;
+        if (pluginId !== "") {
+            const registered = PluginService.getGlobalVar(pluginId, "instance");
+            if (!registered) {
+                PluginService.setGlobalVar(pluginId, "instance", root);
+                root.isActiveInstance = true;
+            } else if (registered === root) {
+                root.isActiveInstance = true;
+            }
         }
         if (root.isActiveInstance) {
             root.updateSleepState();
+            root.reschedule();
         }
     }
 
@@ -60,20 +89,23 @@ PluginComponent {
         }
     }
 
-    // ── Settings change → re-evaluate ──────────────────────────────────
-    onEnabledChanged: if (root.isActiveInstance) root.updateSleepState()
-    onStartHourChanged: if (root.isActiveInstance) root.updateSleepState()
-    onStartMinuteChanged: if (root.isActiveInstance) root.updateSleepState()
-    onEndHourChanged: if (root.isActiveInstance) root.updateSleepState()
-    onEndMinuteChanged: if (root.isActiveInstance) root.updateSleepState()
+    // ── Settings change → re-evaluate + reschedule ─────────────────────
+    onEnabledChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
+    onStartHourChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
+    onStartMinuteChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
+    onEndHourChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
+    onEndMinuteChanged: if (root.isActiveInstance) { root.updateSleepState(); root.reschedule(); }
 
-    // ── Poll every 30s ─────────────────────────────────────────────────
+    // ── Single-shot timer, rescheduled to next boundary ────────────────
     Timer {
         id: checkTimer
-        interval: 30000
-        repeat: true
-        running: root.isActiveInstance
-        onTriggered: root.updateSleepState()
+        interval: 60000
+        repeat: false
+        running: root.isActiveInstance && root.enabled
+        onTriggered: {
+            root.updateSleepState();
+            root.reschedule();
+        }
     }
 
     // ── Control Center widget ──────────────────────────────────────────
