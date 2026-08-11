@@ -109,7 +109,7 @@ PluginComponent {
 
     // ── Overlay (non-dismissable) ──────────────────────────────────────
     TakeAsteakOverlay {
-        id: sleepOverlay
+        id: steakOverlay
         pluginRoot: root
         visible: root.isSteakActive
     }
